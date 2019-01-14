@@ -1,13 +1,18 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 
+from lib.http import render_json
+from lib.sms import send_sms
 
 def submit_phone(request):
-    '''手机注册'''
-    pass
+    '''提交手机号，发送验证码'''
+    phone = request.POST.get('phone')
+    send_sms(phone)
+    return render_json()
 
 
 def a(request):
-    '''短信验证登录'''
+    '''提交短信验证码，登录'''
     pass
 
 

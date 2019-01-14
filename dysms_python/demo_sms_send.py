@@ -67,9 +67,9 @@ def send_sms(business_id, phone_numbers, sign_name, template_code, template_para
 if __name__ == '__main__':
     __business_id = uuid.uuid1()
     #print(__business_id)
-    params = "{\"code\":\"12345\",\"product\":\"云通信\"}"
+    params = "{\"code\":\"img456\",\"product\":\"123\"}"
 	#params = u'{"name":"wqb","code":"12345678","address":"bz","phone":"13000000000"}'
-    print(send_sms(__business_id, "13000000000", "云通信测试", "SMS_5250008", params))
+    print(send_sms(__business_id, "17631816281", "python技巧与练习", "SMS_151176230", params))
    
     
     
