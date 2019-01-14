@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 
 # Create your models here.
@@ -20,3 +21,19 @@ class User(models.Model):
 
     class Meta:
         db_table = "users"
+
+    @property
+    def age(self):
+        today = datetime.date.today()
+        birth_data = datetime.date(self.birth_year, self.birth_month, self.birth_day)
+        return (today - birth_data).days // 365
+
+    def to_dict(self):
+        return {
+            'phonenum': self.phonenum,
+            'nickname': self.nickname,
+            'sex': self.sex,
+            'age': self.age,
+            'avatar': self.avatar,
+            'location': self.location
+        }
