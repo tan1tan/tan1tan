@@ -14,14 +14,13 @@ def gen_vcode(length=4):
     return str(randrange(start, end))
 
 
-def send_sms(phonenum, vcode):
+def send_sms(phonenum):
     '''发送手机验证码'''
     params = config.YZX_SMS_PARAMS.copy()
     params['mobile'] = phonenum
 
     # 创建验证码，并添加到缓存
-    vcode = gen_vcode()
-    params['param'] = vcode
+    params['param'] = gen_vcode()
 
     resp = requests.post(config.YZX_SMS_API, json=params)
     if resp.status_code == 200:
@@ -29,6 +28,6 @@ def send_sms(phonenum, vcode):
         if result['code'] == '000000':
             return True, result['msg']
         else:
-            return False,result['msg']
+            return False, result['msg']
     else:
-        return False,'短信服务器错误'
+        return False, '短信服务器错误'
