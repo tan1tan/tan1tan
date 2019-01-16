@@ -1,10 +1,9 @@
-from django.shortcuts import render
-
 from lib.http import render_json
+from social import logics
 
 
 def get_rcmd_users(request):
-    request.user
+
 
 
     return render_json(None)
