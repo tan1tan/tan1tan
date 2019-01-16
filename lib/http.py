@@ -10,8 +10,8 @@ def render_json(data, code=0):
         'data': data
     }
     if settings.DEBUG:
-        json_data = json.dumps(result, separators=[',',':'], ensure_ascii=False)
-    else:
         json_data = json.dumps(result, ensure_ascii=False, indent=4, sort_keys=True)
+    else:
+        json_data = json.dumps(result, separators=[',', ':'], ensure_ascii=False)
 
     return HttpResponse(json_data)

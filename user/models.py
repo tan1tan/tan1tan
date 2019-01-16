@@ -31,6 +31,7 @@ class User(models.Model):
 
     @property
     def profile(self):
+        '''用户对应的个人配置'''
         if not hasattr(self, '_profile'):
             self._profile, _ =  Profile.objects.get_or_create(id=self.id)
         return self._profile

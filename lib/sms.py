@@ -5,6 +5,7 @@ from django.core.cache import cache
 
 from common import keys
 from swiper import config
+from worker import celery_app
 
 
 def gen_vcode(length=4):
@@ -14,13 +15,12 @@ def gen_vcode(length=4):
     return str(randrange(start, end))
 
 
-def send_sms(phonenum):
-    '''发送手机验证码'''
+@celery_app.task
+def send_sms(phonenum, msg):
+    '''给手机发送信息'''
     params = config.YZX_SMS_PARAMS.copy()
     params['mobile'] = phonenum
-
-    # 创建验证码，并添加到缓存
-    params['param'] = gen_vcode()
+    params['param'] = msg
 
     resp = requests.post(config.YZX_SMS_API, json=params)
     if resp.status_code == 200:
@@ -31,3 +31,10 @@ def send_sms(phonenum):
             return False, result['msg']
     else:
         return False, '短信服务器错误'
+
+
+def send_vcode(phonenum):
+    '''发送手机验证码'''
+    vcode = gen_vcode()  # 创建验证码
+    cache.set(keys.VCODE_KEY % phonenum, vcode, 300)  # 将验证码添加到缓存
+    send_sms.delay(phonenum, vcode)  # 发送信息
