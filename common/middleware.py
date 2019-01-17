@@ -11,7 +11,7 @@ class AuthMiddleware(MiddlewareMixin):
         '/api/user/submit/vcode',
     ]
 
-    def process_request(self,request):
+    def process_request(self, request):
         # 如果当前 url 在白名单内，直接忽略
         if request.path in self.URL_WHITE_LIST:
             return
@@ -22,9 +22,14 @@ class AuthMiddleware(MiddlewareMixin):
             try:
                 request.user = User.objects.get(id=uid)
             except User.DoesNotExist:
-                return render_json('用户不存在', errors.USER_NOT_EXIST)
+                return render_json('用户不存在', errors.UserNotExist.code)
 
         else:
-            return render_json('用户未登录', errors.LOGIN_REQUIRED)
+            return render_json('用户未登录', errors.LogicError.code)
 
 
+class LogicErrMiddleware(MiddlewareMixin):
+    def process_exception(self, request, exception):
+        '''处理程序中的 LogicError'''
+        if isinstance(exception, errors.LogicError):
+            return render_json(exception.data, exception.code)

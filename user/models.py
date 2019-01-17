@@ -2,6 +2,7 @@ import datetime
 from django.db import models
 
 from lib.orm import ModelMixin
+from social.models import Friend
 
 # Create your models here.
 
@@ -35,6 +36,12 @@ class User(models.Model):
         if not hasattr(self, '_profile'):
             self._profile, _ =  Profile.objects.get_or_create(id=self.id)
         return self._profile
+
+    @property
+    def friends(self):
+        '''获取用户所有的好友'''
+        fid_list = Friend.friends_id_list(self.id)
+        return User.objects.filter(id__in=fid_list)
 
     def to_dict(self):
         return {
