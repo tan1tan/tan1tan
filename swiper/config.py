@@ -1,6 +1,10 @@
 '''第三方平台的配置'''
 
-REWIND_TIMES = 3
+REWIND_TIMES = 3  # 每日反悔次数
+SCORE_LIKE = 5  # 右滑积分
+SCORE_DISLIKE = -5  # 左滑积分
+SCORE_SUPERLIKE = 7  # 上滑积分
+
 
 # 云资讯短信平台配置
 YZX_SMS_API = 'https://open.ucpaas.com/ol/sms/sendsms'

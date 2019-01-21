@@ -35,10 +35,19 @@ def submit_vcode(request):
         return render_json('验证码错误', errors.VCODE_ERR)
 
 
+@page_cache
 def get_profile(request):
     '''获取个人资料'''
-    uid = request.session['uid']
-    user = User.objects.get(id=uid)
+    user = request.user
+    key = 'ProfileDict-%s' % user.id
+    # 先从缓存获取
+    profile_dict = cache.get(key)
+    if profile_dict is None:
+        # 如果缓存中没有，从数据库中获取
+        profile_dict = user.profile.to_dict()
+        # 将数据库中的数据添加到缓存
+        cache.set(key, profile_dict, 86400 * 7)
+
     return render_json(user.profile.to_dict())
 
 
@@ -49,9 +58,13 @@ def set_profile(request):
         profile = form.save(commit=False)
         profile.id = request.session['uid']
         profile.save()
+
+        # 更新缓存
+        key = 'ProfileDict-%s' % profile.id
+        cache.set(key, profile.to_dict(), 86400 * 7)
         return render_json(None)
     else:
-        return render_json(form.errors, errors.PROFILE_ERR)
+        raise errors.ProfileErr(form.errors)
         
 
 def upload_avatar(request):
