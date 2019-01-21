@@ -32,7 +32,7 @@ def submit_vcode(request):
 
         return render_json(user.to_dict())
     else:
-        return render_json('验证码错误', errors.VCODE_ERR)
+        return render_json('验证码错误', errors.VcodeErr)
 
 
 @page_cache
