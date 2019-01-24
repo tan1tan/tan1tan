@@ -1,0 +1,7 @@
+django==1.11.18
+gunicorn
+gevent
+redis==2.10.6
+celery
+ipython
+requests
